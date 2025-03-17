@@ -4,10 +4,10 @@ import scipy.stats
 import time
 
 # Inicializar variables de estado si aún no existen
-if experiment_no not in st.session_state:
+if 'experiment_no' not in st.session_state:
     st.session_state['experiment_no'] = 0
 
-if df_experiment_results not in st.session_state:
+if 'df_experiment_results' not in st.session_state:
     st.session_state['df_experiment_results'] = pd.DataFrame(columns=['No', 'Intentos', 'Media'])
 
 st.header("Lanzar una moneda")
@@ -49,15 +49,16 @@ if start_button:
 
     # Guardar resultados en el DataFrame
     new_result = pd.DataFrame({
-        'No': [st.session_state['experiemnt_no']],
+        'No': [st.session_state['experiment_no']],
         'Intentos': [number_of_trials],
         'Media': [mean]
     })
 
+    # Concatenar y eliminar índice anterior
     st.session_state['df_experiment_results'] = pd.concat(
-    [st.session_state['df_experiment_results'], new_result], 
-    ignore_index=True
-    )
+        [st.session_state['df_experiment_results'], new_result], 
+        ignore_index=True
+    ).reset_index(drop=True)
 
 # Mostrar tabla de resultados
 st.subheader('Resultados de los experimentos')
